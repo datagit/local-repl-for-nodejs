@@ -1,0 +1,20 @@
+{
+  "name": "local-repl-for-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "repl": "local-repl"
+  },
+  "devDependencies": {
+    "local-repl": "^4.0.0"
+  },
+  "dependencies": {
+    "env": "0.0.2",
+    "express": "^4.17.1",
+    "joi": "^17.4.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "nodemon": "^2.0.7"
+  }
+}
