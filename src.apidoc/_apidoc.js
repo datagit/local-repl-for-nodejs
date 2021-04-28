@@ -1,6 +1,6 @@
 /**
- * @api {get} /user/:id Request User information
- * @apiVersion 0.2.0
+ * @api {get} /user/:id Get User information
+ * @apiVersion 0.1.0
  * @apiName GetUser
  * @apiGroup User
  *
