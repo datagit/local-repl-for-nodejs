@@ -1,0 +1,44 @@
+# Environment Variables
+@hostname = localhost
+@port = 1337
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@createdAt = {{$datetime iso8601}}
+# @modifiedBy = {{$processEnv USERNAME}}
+@modifiedBy = userLocal
+
+@parseApplicationId = gLnhPy54ASzHkD7xz0a33Rn05yfAOA6D
+@parseJavascriptKey = PWd5j6R75Ed75kP5TxfOBzdNLOJnofkS
+@parseRestApiKey = zXSwIKuK0fzGHrzuzSpMPq8UksTeacJi
+
+@sessionToken = ''
+# begin login --------------
+@username = nali153
+@password = 123456
+
+GET http://{{host}}/api/login?username={{username}}&password={{password}} HTTP/1.1
+x-parse-application-id: {{parseApplicationId}}
+x-parse-javascript-key: {{parseJavascriptKey}}
+x-parse-rest-api-key: {{parseRestApiKey}}
+Content-Type: {{contentType}}
+
+
+# save sessionToken
+# {{sessionToken}}=sessionToken
+# @{
+# const pattern = /"sessionToken": "(.*)"/;
+# sessionToken = $response.body.match(pattern, $1);
+# }
+
+# end login --------------
+
+# begin --------------
+
+# POST http://{{host}}/api/functions/getNailistInsight HTTP/1.1
+# x-parse-application-id: {{parseApplicationId}}
+# x-parse-javascript-key: {{parseJavascriptKey}}
+# x-parse-rest-api-key: {{parseRestApiKey}}
+# Content-Type: {{contentType}}
+# x-parse-session-token:{{sessionToken}}
+
+# end --------------
