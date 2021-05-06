@@ -1,13 +1,18 @@
 /*
 guide: https://developer.mongodb.com/how-to/seed-database-with-fake-data/
+https://github.com/marak/Faker.js/
+https://marak.github.io/faker.js/
 seedScript.js
+node --trace-warnings  mongodb/seedScript.js
 */
 
+const cryptoUtils = require('parse-server/lib/cryptoUtils');
 // require the necessary libraries
 const faker = require('faker');
 const MongoClient = require('mongodb').MongoClient;
 
 // Connection URI
+//mongodb://localhost:27017/nailie-dev
 const YOUR_MONGODB_URI = 'mongodb://localhost:27017';
 
 function randomIntFromInterval(min, max) {
@@ -28,39 +33,42 @@ async function seedDB() {
     await client.connect();
     console.log('Connected correctly to server');
 
-    const collection = client.db('iot').collection('kitty-litter-time-series');
+    const collection = client.db('nailie-dev').collection('Timeline');
 
     // The drop() command destroys all data from a collection.
     // Make sure you run it against proper database and collection.
-    await collection.drop();
+
+    await collection.deleteMany({seedScript: true});
 
     // make a bunch of time series data
-    let timeSeriesData = [];
-
-    for (let i = 0; i < 5000; i++) {
-      const firstName = faker.name.firstName();
-      const lastName = faker.name.lastName();
-      let newDay = {
-        timestamp_day: faker.date.past(),
-        cat: faker.random.word(),
-        owner: {
-          email: faker.internet.email(firstName, lastName),
-          firstName,
-          lastName,
-        },
-        events: [],
+    let requests = [];
+    for (let i = 0; i < 4000000; i++) {
+      const newRecord = {
+        _id: cryptoUtils.newObjectId(),
+        _p_user: '_User$J93kqpVSB3',
+        _p_booking: 'Booking$oQIPkUqiot',
+        _p_content: 'Alert$tB3XrORSs0',
+        mentionType: 'BOOKING',
+        status: faker.random.arrayElements(['READ', 'UNREAD'], 1).pop(),
+        priority: 3,
+        isPushed: faker.datatype.boolean(),
+        isPublic: faker.datatype.boolean(),
+        hidden: faker.datatype.boolean(),
+        _created_at: faker.date.past(1).toISOString(),
+        _updated_at: faker.date.past(1).toISOString(),
+        pushTime: faker.date.past(1).toISOString(),
+        receiverId: 'cFFzKeBWuj',
+        seedScript: true,
       };
-
-      for (let j = 0; j < randomIntFromInterval(1, 6); j++) {
-        let newEvent = {
-          timestamp_event: faker.date.past(),
-          weight: randomIntFromInterval(14, 16),
-        };
-        newDay.events.push(newEvent);
+      requests.push(newRecord);
+      if (requests.length === 1000) {
+        await collection.insertMany(requests);
+        requests = [];
       }
-      timeSeriesData.push(newDay);
     }
-    await collection.insertMany(timeSeriesData);
+    if (requests.length > 0) {
+      await collection.insertMany(requests);
+    }
 
     console.log('Database seeded! :)');
     await client.close();
@@ -70,3 +78,7 @@ async function seedDB() {
 }
 
 seedDB();
+
+
+// Parse run explain
+// timelineQuery.explain(true).find()
